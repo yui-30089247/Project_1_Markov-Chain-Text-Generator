@@ -1,5 +1,8 @@
 #include "markov.h"
 #include <fstream>
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
 
 string joinWords(const string words[], int startIndex, int count) {
     string result = "";
@@ -31,7 +34,7 @@ int readWordsFromFile(string filename, string words[], int maxWords) {
 }
 
 int buildMarkovChain(const string words[], int numWords, int order, string prefixes[], string suffixes[], int maxChainSize) {
-        int count = 0;
+    int count = 0;
 
     for (int i = 0; i < numWords - order; i++) {
         string prefix = joinWords(words, i, order);
@@ -49,6 +52,22 @@ int buildMarkovChain(const string words[], int numWords, int order, string prefi
 }
 
 string getRandomSuffix(const string prefixes[], const string suffixes[], int chainSize, string currentPrefix) {
+    int matchCount = 0;
+    for (int i = 0; i < chainSize; i++) {
+        if (prefixes[i] == currentPrefix) {
+            matchCount++;
+        }
+    }
+    if (matchCount == 0) return "";
+
+    unsigned seed = time(0);
+    srand(seed);
+    int pick = (rand() % ((matchCount - 1) - 0));
+    for (int i = 0; i < chainSize; i++) {
+        if (i == pick) {
+            return suffixes[i];
+        }
+    }
     return "";
 }
 
