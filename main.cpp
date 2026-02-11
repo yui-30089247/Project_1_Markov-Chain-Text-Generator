@@ -23,8 +23,10 @@ int main() {
     }
 
     for (int i = 0; i < 10; i++) {
-        cout << getRandomSuffix(prefixes, suffixes, chainSize, "the") << std::endl;
+        // cout << getRandomSuffix(prefixes, suffixes, chainSize, "the") << std::endl;
     }
 
-
+    for (int i = 0; i < 5; i++) {
+        cout << getRandomPrefix(prefixes, chainSize) << endl;
+    }
 }

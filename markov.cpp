@@ -52,6 +52,9 @@ int buildMarkovChain(const string words[], int numWords, int order, string prefi
 }
 
 string getRandomSuffix(const string prefixes[], const string suffixes[], int chainSize, string currentPrefix) {
+    unsigned seed = time(0);
+    srand(seed);
+    
     int matchCount = 0;
     for (int i = 0; i < chainSize; i++) {
         if (prefixes[i] == currentPrefix) {
@@ -60,8 +63,7 @@ string getRandomSuffix(const string prefixes[], const string suffixes[], int cha
     }
     if (matchCount == 0) return "";
 
-    unsigned seed = time(0);
-    srand(seed);
+
     int pick = (rand() % ((matchCount - 1) - 0));
     for (int i = 0; i < chainSize; i++) {
         if (i == pick) {
@@ -72,7 +74,11 @@ string getRandomSuffix(const string prefixes[], const string suffixes[], int cha
 }
 
 string getRandomPrefix(const string prefixes[], int chainSize) {
-    return "";
+    unsigned seed = time(0);
+    srand(seed);
+
+    int index = rand() % chainSize;
+    return prefixes[index];
 }
 
 string generateText(const string prefixes[], const string suffixes[], int chainSize, int order, int numWords) {
