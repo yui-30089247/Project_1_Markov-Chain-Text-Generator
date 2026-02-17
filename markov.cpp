@@ -1,8 +1,6 @@
 #include "markov.h"
 #include <fstream>
 #include <iostream>
-#include <ctime>
-#include <cstdlib>
 
 string joinWords(const string words[], int startIndex, int count) {
     string result = "";
