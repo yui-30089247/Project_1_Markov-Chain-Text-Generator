@@ -20,7 +20,7 @@ int readWordsFromFile(string filename, string words[], int maxWords) {
     ifstream inputFile;
     inputFile.open("./" + filename);
 
-    if (!inputFile) {
+    if (!inputFile.is_open()) {
         return -1;
     }
 
@@ -36,7 +36,7 @@ int readWordsFromFile(string filename, string words[], int maxWords) {
 int buildMarkovChain(const string words[], int numWords, int order, string prefixes[], string suffixes[], int maxChainSize) {
     int count = 0;
 
-    for (int i = 0; i < numWords - order; i++) {
+    for (int i = 0; i <= numWords - order - 1; i++) {
         string prefix = joinWords(words, i, order);
         string suffix = words[i + order];
         prefixes[count] = prefix;
@@ -47,14 +47,10 @@ int buildMarkovChain(const string words[], int numWords, int order, string prefi
             break;
         }
     }
-
     return count;
 }
 
 string getRandomSuffix(const string prefixes[], const string suffixes[], int chainSize, string currentPrefix) {
-    unsigned seed = time(0);
-    srand(seed);
-    
     int matchCount = 0;
     for (int i = 0; i < chainSize; i++) {
         if (prefixes[i] == currentPrefix) {
@@ -63,24 +59,36 @@ string getRandomSuffix(const string prefixes[], const string suffixes[], int cha
     }
     if (matchCount == 0) return "";
 
-
-    int pick = (rand() % ((matchCount - 1) - 0));
+    int currentMatch = 0;
+    int pick = rand() % matchCount;
     for (int i = 0; i < chainSize; i++) {
-        if (i == pick) {
-            return suffixes[i];
+        if (prefixes[i] == currentPrefix) {
+            if (currentMatch == pick) {
+                return suffixes[i];
+            }
+            currentMatch++;
         }
     }
     return "";
 }
 
 string getRandomPrefix(const string prefixes[], int chainSize) {
-    unsigned seed = time(0);
-    srand(seed);
-
     int index = rand() % chainSize;
     return prefixes[index];
 }
 
 string generateText(const string prefixes[], const string suffixes[], int chainSize, int order, int numWords) {
-    return "";
+    string prefix = getRandomPrefix(prefixes, chainSize);
+    string result = prefix; 
+
+    for (int i = 0; i < numWords; i++) {
+        string suffix = getRandomSuffix(prefixes, suffixes, chainSize, prefix); // cat
+        if (suffix == "") {
+            break;
+        }
+        result += " " + suffix;
+        prefix = suffix;
+    }
+
+    return result;
 }
